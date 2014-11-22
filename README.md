@@ -1,0 +1,1 @@
+small scripts to generate character n-gram raw data from any (English) corpus. 
