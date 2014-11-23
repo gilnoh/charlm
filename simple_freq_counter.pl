@@ -7,7 +7,7 @@
 # (* 26 26 26)  ;;  17576 
 # (* 26 26 26 26) ;; 456976
 # (* 26 26 26 26 26) ;; 11881376 --- this is the target for now. 
-# (* 26 26 26 26 26 26) ;; 308915776 --- a bit too big for my aire mem? 
+# (* 26 26 26 26 26 26) ;; 308915776 --- a bit too big for my aire mem? nope. okay. 
 
 use warnings; 
 use strict; 
