@@ -8,21 +8,23 @@ my $NBestN=20;
 
 while(<FILEIN>)
 {
-    /(\d+)-(\d+)-(\d+)\t\t(\d+)\n/;
-    my $pre = $1;
-    my $this = $2;
-    my $ne = $3; 
-    my $count = $4; 
-    #dcode# print STDERR "$pre - $this - $ne : $count\n"; 
+    /(\d+)-(\d+)-(\d+)-(\d+)\t\t(\d+)\n/;
+    my $pre1 = $1;
+    my $pre2 = $2;
+    my $next1 = $3; 
+    my $next2 = $4; 
+    my $count = $5; 
+    #dcode# 
+    print STDERR "$pre1 - $pre2 - $next1 - $next2 : $count\n"; 
 
-    my $key = "$pre-$this"; 
+    my $key = "$pre1-$pre2"; 
     if (!exists $midpos{$key})
     {
 	$midpos{$key} = {}; 
     }
 
     my $href = $midpos{$key};
-    my $p = "$pre-$this-$ne"; 
+    my $p = "$pre1-$pre2-$next1-$next2"; 
     $href->{$p} = $count; 
 }
 close FILEIN; 
