@@ -5,17 +5,17 @@ open FILEIN, "<pl4.txt";
 
 my %midpos; 
 my $NBestN=20; 
-
+my $linecount = 0; 
 while(<FILEIN>)
 {
+    $linecount++; 
     /(\d+)-(\d+)-(\d+)-(\d+)\t\t(\d+)\n/;
     my $pre1 = $1;
     my $pre2 = $2;
     my $next1 = $3; 
     my $next2 = $4; 
     my $count = $5; 
-    #dcode# 
-    print STDERR "$pre1 - $pre2 - $next1 - $next2 : $count\n"; 
+    #dcode# print STDERR "$pre1 - $pre2 - $next1 - $next2 : $count\n"; 
 
     my $key = "$pre1-$pre2"; 
     if (!exists $midpos{$key})
@@ -25,7 +25,18 @@ while(<FILEIN>)
 
     my $href = $midpos{$key};
     my $p = "$pre1-$pre2-$next1-$next2"; 
-    $href->{$p} = $count; 
+    $href->{$p} = $count;
+
+    # trim down
+    if ($linecount % 100000 == 0)
+    {
+        print STDERR "."; 
+        foreach my $k (keys %midpos)
+        {
+            my %trimed_hash = take_only_best($midpos{$k});
+            $midpos{$k} = \%trimed_hash; 
+        }
+    }
 }
 close FILEIN; 
 
