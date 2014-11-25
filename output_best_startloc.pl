@@ -5,11 +5,11 @@ use warnings;
 use Math::Combinatorics; 
 
 # configuration 
-my $GramN = 5; 
-my $NBestN = 2000; 
-#my $GRAM_TABLE_FILE = "./afp2010_ngrams/gram4.csv"; 
-#my $GRAM_TABLE_FILE = "./afp2010_ngrams/gram5.csv"; 
-my $GRAM_TABLE_FILE = "./afp2010_ngrams/ngram6.csv"; 
+my $GramN = 4; 
+my $NBestN = 20; 
+#my $GRAM_TABLE_FILE = "./afp2010_ngrams/gram4.csv";  # for 3 gram (head+3=4)
+my $GRAM_TABLE_FILE = "./afp2010_ngrams/gram5.csv";  # for 4 gram (head+4=5)
+#my $GRAM_TABLE_FILE = "./afp2010_ngrams/ngram6.csv"; # for 5 gram (head+5=6)
 
 # this is the target ... 
 my @SCT = (
@@ -106,7 +106,7 @@ my $clear_count=0;
 	    my $count = calc_obs_freq(@{$_}); 
 	    #my $count = calc_obs_logfreq(@{$_}); 
 	    $nbests{join('-', @{$_})} = $count;             
-            #print join('-', @{$_}), "\t\t", $count, "\n"; 
+            #print STDERR join('-', @{$_}), "\t\t", $count, "\n"; 
 	    $c++; 
 	}
 	if ($c > 100000)
