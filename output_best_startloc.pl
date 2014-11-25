@@ -6,6 +6,7 @@ use Math::Combinatorics;
 
 # configuration 
 my $GramN = 5; 
+my $NBestN = 2000; 
 #my $GRAM_TABLE_FILE = "./afp2010_ngrams/gram4.csv"; 
 #my $GRAM_TABLE_FILE = "./afp2010_ngrams/gram5.csv"; 
 my $GRAM_TABLE_FILE = "./afp2010_ngrams/ngram6.csv"; 
@@ -55,7 +56,7 @@ sub load_gramtable_headonly
         { 
             $key =~ s/^\^//;
             $gram_table{uc($key)} = $val;
-            print STDERR $key . "\t" .  $val . "\n"; 
+#            print STDERR $key . "\t" .  $val . "\n"; 
         }
     }
     close CSV; 
@@ -81,7 +82,9 @@ load_gramtable_headonly();
 #$count = calc_obs_freq(125,43,94); 
 #print $count, "\n"; 
 
+my %nbests;  # nbest will be stored here ... 
 my $c=0; # simple count for number of permutations.  
+my $clear_count=0;  
 # and now, calc best permutations 
 {
     # prepare permutation candidates. 
@@ -102,13 +105,40 @@ my $c=0; # simple count for number of permutations.
 	    # get frequency count and print it on STDOUT
 	    my $count = calc_obs_freq(@{$_}); 
 	    #my $count = calc_obs_logfreq(@{$_}); 
-            print join('-', @{$_}), "\t\t", $count, "\n"; 
+	    $nbests{join('-', @{$_})} = $count;             
+            #print join('-', @{$_}), "\t\t", $count, "\n"; 
 	    $c++; 
+	}
+	if ($c > 100000)
+	{
+	    # leave only top N...
+	    my %new_nbests = take_only_best(); 
+	    #print STDERR "size ", scalar(%nbests), " trimed to size, ", scalar(%new_nbests), "\n" ; 
+	    print STDERR "."; 
+	    %nbests = %new_nbests; 
+	    $c = 0; 
+            $clear_count++; 
+            if ($clear_count > 10)
+            {
+                last; 
+            }
 	}
     }
 }
 
-print STDERR "In total $c len-n patterns have been tried\n"; 
+print STDERR "In total, about ", 100000 * $clear_count + $c, "len-n patterns have been tried\n"; 
+
+%nbests = take_only_best(); 
+
+# finish --- 
+# now nbests holds the best patterns. print them out, say first 10? 
+my @best_keys = sort {$nbests{$b} <=> $nbests{$a}} keys %nbests; 
+
+for(my $i=0; $i < scalar(keys %nbests); $i++)
+{
+    print " ", $best_keys[$i], "\t", $nbests{$best_keys[$i]}, "\n"; 
+}
+
 
 # gets an array of "position num" 
 # and returns 10 char-patterns, accoring to the locations. 
@@ -166,3 +196,21 @@ sub calc_obs_freq
     return $count; 
 }
 
+
+# look nbest, pick top n (say, 2000) 
+# return them as a new hash. 
+sub take_only_best
+{
+    my %result; 
+    my @keys = keys %nbests; 
+    my @sorted_keys = sort {$nbests{$b} <=> $nbests{$a}} @keys; 
+    
+    # copy only first NBestN
+    for (my $i=0; ($i < $NBestN) and ($i < @sorted_keys); $i++)
+    {
+	my $k = $sorted_keys[$i]; 
+	$result{$k} = $nbests{$k}; 
+    }
+#    print STDERR "size: ", scalar(%result), "\n"; 
+    return %result; 
+}
