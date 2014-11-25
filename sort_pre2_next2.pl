@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-open FILEIN, "<pl3.txt"; 
+open FILEIN, "<pl4.txt"; 
 
 my %midpos; 
 my $NBestN=20; 
