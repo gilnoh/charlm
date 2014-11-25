@@ -4,7 +4,7 @@ use warnings;
 open FILEIN, "<pl3.txt"; 
 
 my %midpos; 
-my $NBestN=20; 
+my $NBestN=50; 
 
 while(<FILEIN>)
 {
