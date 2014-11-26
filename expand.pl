@@ -87,36 +87,112 @@ load_gram_tables();
 ##
 ## MAIN 
 
-# one expansion test for len-6 ... 
-# my @r1 = expand_one_length(keys %seed); 
+
+# # let's try, say, 10-piece segment? 
+# my @r1 = expand_one_length(keys %seed);  #l4
+# my @r2 = expand_one_length(@r1);  # l5
+# my @r3 = expand_one_length(@r2);  # l6
+# # now it is about 400k. reduce. 
+# my @temp = sort_pattern_array(@r3); 
+# splice @temp, 50;  
+# #print "$_\n" foreach (@temp); 
+# #die; 
+# my @r4 = expand_one_length(@temp);  # l7
+# #print "$_\n" foreach (sort_pattern_array(@r4)); 
+# my @r5 = expand_one_length(@r4); # l8
+# my @r6 = expand_one_length(@r5); # l9 
+# my @result1 = sort_pattern_array(@r6); 
+# splice @result1, 50; 
+# #print "$_\n" foreach (@result1); 
+# my @r7 = expand_one_length(@result1); #l10
+# my @r8 = expand_one_length(@r7); # l11
+# my @result2 = sort_pattern_array(@r8);
+# splice @result2, 50; 
+# print "$_\n" foreach (@result2); 
+
+## let's start with one best start, from the above 10-piece result.
+# my @r1 = expand_one_length(("125-43-94-80-90-71-126-89-95-32-40")); 
 # my @r2 = expand_one_length(@r1); 
 # my @r3 = expand_one_length(@r2); 
-# my @result = sort_pattern_array(@r3); 
-# print "$_\n" foreach (@result); 
+# my @temp1 = sort_pattern_array(@r3); 
+# splice @temp1, 50; 
+# my @r4 = expand_one_length(@temp1); 
+# my @r5 = expand_one_length(@r4); 
+# my @r6 = expand_one_length(@r5); 
+# my @temp2 = sort_pattern_array(@r6); 
+# splice @temp2, 50; 
+# print "$_\n" foreach (@temp2); 
 
-# let's try, say, 10-piece segment? 
-my @r1 = expand_one_length(keys %seed);  #l4
-my @r2 = expand_one_length(@r1);  # l5
-my @r3 = expand_one_length(@r2);  # l6
-# now it is about 400k. reduce. 
-my @temp = sort_pattern_array(@r3); 
-splice @temp, 50;  
-#print "$_\n" foreach (@temp); 
-#die; 
-my @r4 = expand_one_length(@temp);  # l7
-#print "$_\n" foreach (sort_pattern_array(@r4)); 
-my @r5 = expand_one_length(@r4); # l8
-my @r6 = expand_one_length(@r5); # l9 
-my @result1 = sort_pattern_array(@r6); 
-splice @result1, 50; 
-#print "$_\n" foreach (@result1); 
-my @r7 = expand_one_length(@result1); #l10
-my @r8 = expand_one_length(@r7); # l11
-my @result2 = sort_pattern_array(@r8);
-splice @result2, 50; 
-print "$_\n" foreach (@result2); 
+## wow. that worked pretty well. Let's try till the end. 
+sub expand_till_end; 
+
+# this pattern was what we get from starting from the most common length 3-pattern to length 11. 
+# Let's try to some more length from this. 
+#expand_till_end(("125-43-94-80-90-71-126-89-95-32-40")); 
+
+# and more ... (this, again from the previous step...)
+#expand_till_end(("125-43-94-80-90-71-126-89-95-32-40-107-41-74-82-79-68-35-105-27-50-31-44-81")); 
+
+# and more (again from previous .. ) 
+#expand_till_end(("125-43-94-80-90-71-126-89-95-32-40-107-41-74-82-79-68-35-105-27-50-31-44-81-2-39-67-96-119-57-7-36-37-42-55-122-92-112")); 
+
+# ok. we convered half. try another 1/4. 
+#expand_till_end(("125-43-94-80-90-71-126-89-95-32-40-107-41-74-82-79-68-35-105-27-50-31-44-81-2-39-67-96-119-57-7-36-37-42-55-122-92-112-91-101-117-59-10-11-46-0-18-28-51-118-127-45-108-47-48-23-34-65-49-116-78-58-30-70")); 
+
+# wow. great. now the final stretch! Hey! 
+#expand_till_end(("125-43-94-80-90-71-126-89-95-32-40-107-41-74-82-79-68-35-105-27-50-31-44-81-2-39-67-96-119-57-7-36-37-42-55-122-92-112-91-101-117-59-10-11-46-0-18-28-51-118-127-45-108-47-48-23-34-65-49-116-78-58-30-70-24-3-103-62-106-61-115-29-26-22-4-88-56-38-114-54-69-12-76-72-98-121-33-97-19-100-20-75-6-85-1-77")); 
+
+# yep. great. We have it all! 
+# The final result is this: 
+print "125-43-94-80-90-71-126-89-95-32-40-107-41-74-82-79-68-35-105-27-50-31-44-81-2-39-67-96-119-57-7-36-37-42-55-122-92-112-91-101-117-59-10-11-46-0-18-28-51-118-127-45-108-47-48-23-34-65-49-116-78-58-30-70-24-3-103-62-106-61-115-29-26-22-4-88-56-38-114-54-69-12-76-72-98-121-33-97-19-100-20-75-6-85-1-77-52-13-87-64-17-102-109-63-86-60-124-9-16-14-120-93-111-84-15-99-53-123-8-104-113-66-21-25-110-73-83-5\n"; 
+my @final_result = get_char_pattern( pattern_string_to_array("125-43-94-80-90-71-126-89-95-32-40-107-41-74-82-79-68-35-105-27-50-31-44-81-2-39-67-96-119-57-7-36-37-42-55-122-92-112-91-101-117-59-10-11-46-0-18-28-51-118-127-45-108-47-48-23-34-65-49-116-78-58-30-70-24-3-103-62-106-61-115-29-26-22-4-88-56-38-114-54-69-12-76-72-98-121-33-97-19-100-20-75-6-85-1-77-52-13-87-64-17-102-109-63-86-60-124-9-16-14-120-93-111-84-15-99-53-123-8-104-113-66-21-25-110-73-83-5")); 
+print "$_\n" for(@final_result); 
 
 
+
+# start with single seed, try to map further some distance ... 
+sub expand_till_end
+{
+    my $seed = $_[0]; 
+    my $len = scalar(pattern_string_to_array($seed)); 
+    my @start = expand_one_length(($seed));
+    while($len < 126) # edit this for your purpose ... (too large distance might miss the best... do incrementally) 
+    {
+        my @r1 = expand_one_length(@start); 
+        $len++; 
+        my @r2 = expand_one_length(@r1); 
+        $len++; 
+        my @temp1 = sort_pattern_array(@r2); 
+        if (@temp1 > 50)
+        {
+            splice @temp1, 50; 
+        }
+        @start = @temp1; 
+    }
+    print "$_\n" foreach (@start); 
+    my @unscrambled = get_char_pattern(pattern_string_to_array($start[0])); 
+    print "$start[0]\n"; 
+    print "$_\n" foreach (@unscrambled); 
+    @unscrambled = get_char_pattern(pattern_string_to_array($start[1])); 
+    print "$start[1]\n"; 
+    print "$_\n" foreach (@unscrambled); 
+    @unscrambled = get_char_pattern(pattern_string_to_array($start[2])); 
+    print "$start[2]\n"; 
+    print "$_\n" foreach (@unscrambled); 
+    @unscrambled = get_char_pattern(pattern_string_to_array($start[3])); 
+    print "$start[3]\n"; 
+    print "$_\n" foreach (@unscrambled); 
+    @unscrambled = get_char_pattern(pattern_string_to_array($start[4])); 
+    print "$start[4]\n"; 
+    print "$_\n" foreach (@unscrambled); 
+    @unscrambled = get_char_pattern(pattern_string_to_array($start[5])); 
+    print "$start[5]\n"; 
+    print "$_\n" foreach (@unscrambled); 
+    @unscrambled = get_char_pattern(pattern_string_to_array($start[6])); 
+    print "$start[6]\n"; 
+    print "$_\n" foreach (@unscrambled); 
+
+}
 
 
 # a list of candidates comes (string array) ---  ["125-43-94", "99-33-66", ...] 
@@ -283,6 +359,7 @@ sub expand_one_cand()
 }
 
 
+# returns log count (so you can product as sum of log count )
 sub calc_obs_freq
 {
     my @pos = @_; 
