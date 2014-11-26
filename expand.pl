@@ -107,9 +107,15 @@ my @r4 = expand_one_length(@temp);  # l7
 #print "$_\n" foreach (sort_pattern_array(@r4)); 
 my @r5 = expand_one_length(@r4); # l8
 my @r6 = expand_one_length(@r5); # l9 
-my @result = sort_pattern_array(@r6); 
-splice @result, 50; 
-print "$_\n" foreach (@result); 
+my @result1 = sort_pattern_array(@r6); 
+splice @result1, 50; 
+#print "$_\n" foreach (@result1); 
+my @r7 = expand_one_length(@result1); #l10
+my @r8 = expand_one_length(@r7); # l11
+my @result2 = sort_pattern_array(@r8);
+splice @result2, 50; 
+print "$_\n" foreach (@result2); 
+
 
 
 
